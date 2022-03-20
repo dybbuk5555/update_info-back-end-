@@ -1,9 +1,7 @@
 const sql = require("./db.js");
 
-exports.getAll = (result) => {
-    let query = "SELECT Situacao_registro FROM tabela_lista_filtros_situacao_registro";
-
-    sql.query(query, (err, res) => {
+exports.findOne = ({ username, password }, result) => {
+    sql.query(`SELECT * FROM tabela_users_sgdb WHERE user LIKE '${username}' and senha LIKE '${password}'`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);

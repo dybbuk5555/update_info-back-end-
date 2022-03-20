@@ -1,12 +1,6 @@
 const sql = require("./db.js");
 
-// constructor
-const Cnae = function (cnae) {
-  this.cnae = cnae.cnae;
-  this.descricao = cnae.descricao;
-};
-
-Cnae.getAll = (result) => {
+exports.getAll = (result) => {
   let query = "SELECT CNAE FROM tabela_lista_filtros_cnae";
 
   sql.query(query, (err, res) => {
@@ -21,4 +15,3 @@ Cnae.getAll = (result) => {
   });
 };
 
-module.exports = Cnae;

@@ -33,13 +33,15 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/routes.js")(app);
+require("./app/routes/auth.routes.js")(app);
+
 
 const job = schedule.scheduleJob('*/1 * * * *', function () {
-  request(options, function (error, response) {
+/*  request(options, function (error, response) {
     if (error) throw new Error(error);
 
     const data = JSON.parse(response.body);
-
+    
     let cnpj, razao_social, endereco, cidade, uf, cep, situacao_registro, situacao_anuidade, registro_regional;
 
     for (let i = 0; i < data.length; i++) {
@@ -63,7 +65,7 @@ const job = schedule.scheduleJob('*/1 * * * *', function () {
         }
       );
     }
-  });
+  });*/
 });
 
 
