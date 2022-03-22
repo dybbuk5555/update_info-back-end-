@@ -10,7 +10,6 @@ exports.getAll = (result) => {
       return;
     }
 
-    console.log("result: ", res);
     result(null, res);
   });
 };

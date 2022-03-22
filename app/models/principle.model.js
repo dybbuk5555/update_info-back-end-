@@ -1,10 +1,10 @@
 const sql = require("./db.js");
 
-exports.findAll = ({ cnae_principal, situacao_registro, situacao_anuidade }, result) => {
+exports.findAll = ({ cnae_principal, situacao_registro, situacao_anuidade, start, limit }, result) => {
   let query = "SELECT * FROM tabela_dados_local_principal";
 
   if (cnae_principal) {
-    query += ` WHERE CNAE_principal LIKE '${cnae_principal}%'`;
+    query += ` WHERE CNAE_principal LIKE '${cnae_principal}'`;
   }
 
   if (situacao_registro) {
@@ -14,6 +14,8 @@ exports.findAll = ({ cnae_principal, situacao_registro, situacao_anuidade }, res
   if (situacao_anuidade) {
     query += ` and Situacao_anuidade LIKE '${situacao_anuidade}'`;
   }
+
+  query += ` Limit ${start}, ${limit}`;
 
   sql.query(query, (err, res) => {
     if (err) {

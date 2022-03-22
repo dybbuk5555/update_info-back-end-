@@ -5,8 +5,11 @@ exports.findAll = (req, res) => {
   const cnae_principal = req.query.cnae_principal;
   const situacao_registro = req.query.situacao_registro;
   const situacao_anuidade = req.query.situacao_anuidade;
+  const start = Number.parseInt(req.query._start);
+  const limit = Number.parseInt(req.query._limit);
+  console.log(start, limit);
 
-  Principle.findAll({ cnae_principal, situacao_registro, situacao_anuidade }, (err, data) => {
+  Principle.findAll({ cnae_principal, situacao_registro, situacao_anuidade, start, limit }, (err, data) => {
     if (err)
       res.status(500).send({
         message:

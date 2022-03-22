@@ -10,7 +10,7 @@ exports.signin = (req, res) => {
     User.findOne({ username, password }, (err, data) => {
         if (err) {
             res.status(500).send({ message: err.message });
-        } else {
+        } else if (Object.keys(data).length) {
             var token = jwt.sign({ username: username }, config.secret, {
                 expiresIn: 86400 // 24 hours
             });
@@ -20,7 +20,9 @@ exports.signin = (req, res) => {
                 accessToken: token
             });
 
-        };
+        } else {
+            res.status(404).send({ message: "Incorrect username or password!" });
+        }
     });
 
 };

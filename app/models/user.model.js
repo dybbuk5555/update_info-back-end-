@@ -8,7 +8,6 @@ exports.findOne = ({ username, password }, result) => {
             return;
         }
 
-        console.log("result: ", res);
         result(null, res);
     });
 };
