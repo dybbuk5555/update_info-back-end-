@@ -28,29 +28,10 @@ app.use(express.json()); /* bodyParser.json() is deprecated */
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-// simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
-});
-
 require("./app/routes/routes.js")(app);
 require("./app/routes/auth.routes.js")(app);
 
-const update = async () => {
-  let response;
-  try {
-    response = await request(options);
-  } catch (err) {
-    throw new Error(err);
-    return res.status(500).send();
-  }
-
-
-}
-
-
-
-
+let updateTime = "";
 
 const job = schedule.scheduleJob('*/1 * * * *', function () {
   request(options, function (error, response) {
@@ -72,7 +53,31 @@ const job = schedule.scheduleJob('*/1 * * * *', function () {
       cnpj = cnpj.slice(0, 2) + "." + cnpj.slice(2, 5) + "." + cnpj.slice(5, 8) + "/" + cnpj.slice(8, 12) + "-" + cnpj.slice(12);
       query += `UPDATE tabela_dados_local_principal SET Razao_Social = '${razao_social}', Endereco = '${endereco}', Cidade = '${cidade}', UF = '${uf}', CEP = '${cep}', Situacao_registro = '${situacao_registro}', Situacao_anuidade = '${situacao_anuidade}', Registro_Regional = '${registro_regional}' WHERE CNPJ = '${cnpj}'; `
     }
-    console.log(query);
+    let date_ob = new Date();
+
+    // current date
+    // adjust 0 before single digit date
+    let date = ("0" + date_ob.getDate()).slice(-2);
+
+    // current month
+    let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+    // current year
+    let year = date_ob.getFullYear();
+
+    // current hours
+    let hours = date_ob.getHours();
+
+    // current minutes
+    let minutes = date_ob.getMinutes();
+
+    // current seconds
+    let seconds = date_ob.getSeconds();
+
+    // date & time in YYYY-MM-DD HH:MM:SS format
+    updateTime = month + '/' + date + '/' + year + ' ' + hours + ':' + minutes + ':' + seconds;
+    console.log(updateTime);
+
     sql.query(query, (err, results, fields) => {
       if (err) throw err;
       for (let i = 0; i < results.length; i++) {
@@ -82,6 +87,10 @@ const job = schedule.scheduleJob('*/1 * * * *', function () {
   });
 });
 
+// simple route
+app.get("/", (req, res) => {
+  res.json({ updateTime: updateTime });
+});
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
