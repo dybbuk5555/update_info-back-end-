@@ -2,12 +2,22 @@ const Principle = require("../models/principle.model.js");
 
 // Retrieve all data from the database (with condition).
 exports.findAll = (req, res) => {
-  const cnae_principal = req.query.cnae_principal;
-  const situacao_registro = req.query.situacao_registro;
-  const situacao_anuidade = req.query.situacao_anuidade;
+  let cnae_principal = null;
+  let situacao_registro = null;
+  let situacao_anuidade = null;
+
+  if(req.query.cnae_principal) {
+    cnae_principal = JSON.parse(req.query.cnae_principal);
+  }
+  if(req.query.situacao_registro) {
+    situacao_registro = JSON.parse(req.query.situacao_registro);
+  }
+  if(req.query.situacao_anuidade) {
+    situacao_anuidade = JSON.parse(req.query.situacao_anuidade);
+  }
   const start = Number.parseInt(req.query._start);
   const limit = Number.parseInt(req.query._limit);
-  console.log(start, limit);
+  console.log(cnae_principal);
 
   Principle.findAll({ cnae_principal, situacao_registro, situacao_anuidade, start, limit }, (err, data) => {
     if (err)

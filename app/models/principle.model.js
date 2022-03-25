@@ -8,7 +8,13 @@ exports.findAll = ({ cnae_principal, situacao_registro, situacao_anuidade, start
   }
 
   if (situacao_registro) {
-    query += ` and Situacao_registro LIKE '${situacao_registro}'`;
+    query += ` and (Situacao_registro LIKE '${situacao_registro[0]}'`;
+    
+    for (let i = 1; i < situacao_registro.length; i ++) 
+      query += ` or Situacao_registro LIKE '${situacao_registro[i]}'`;
+    
+    query += `)`;
+    
   }
 
   if (situacao_anuidade) {
@@ -31,10 +37,9 @@ exports.findAll = ({ cnae_principal, situacao_registro, situacao_anuidade, start
 
 exports.update = ({ cnpj, razao_social, endereco, cidade, uf, cep, situacao_registro, situacao_anuidade, registro_regional }, result) => {
   cnpj = cnpj.slice(0, 2) + "." + cnpj.slice(2, 5) + "." + cnpj.slice(5, 8) + "/" + cnpj.slice(8, 12) + "-" + cnpj.slice(12);
-
+  const query = `UPDATE tabela_dados_local_principal SET Razao_Social = '${razao_social}', Endereco = '${endereco}', Cidade = '${cidade}', UF = '${uf}', CEP = '${cep}', Situacao_registro = '${situacao_registro}', Situacao_anuidade = '${situacao_anuidade}', Registro_Regional = '${registro_regional}' WHERE CNPJ = '${cnpj}'`;
   sql.query(
-    "UPDATE tabela_dados_local_principal SET Razao_Social = ?, Endereco = ?, Cidade = ?, UF = ?, CEP = ?, Situacao_registro = ?, Situacao_anuidade = ?, Registro_Regional = ? WHERE CNPJ = ?",
-    [razao_social, endereco, cidade, uf, cep, situacao_registro, situacao_anuidade, registro_regional, cnpj],
+    query, 
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -48,7 +53,6 @@ exports.update = ({ cnpj, razao_social, endereco, cidade, uf, cep, situacao_regi
         return;
       }
 
-      console.log("updated data: ", { cnpj: cnpj });
       result(null, { cnpj: cnpj });
     }
   );
